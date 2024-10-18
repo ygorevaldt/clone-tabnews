@@ -8,7 +8,7 @@
     },
     "keywords": [],
     "author": "Ygor Evaldt",
-    "license": "ISC",
+    "license": "MIT",
     "dependencies": {
         "next": "13.1.6",
         "react": "18.2.0",
