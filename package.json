@@ -4,7 +4,10 @@
     "description": "Minha implementação do https://www.tabnews.com.br feita para aplicar na prática os conhecimentos passados durante as aulas do https://curso.dev",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint"
     },
     "keywords": [],
     "author": "Ygor Evaldt",
