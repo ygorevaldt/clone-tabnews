@@ -1,20 +1,20 @@
 {
-    "name": "clone-tabnews",
-    "version": "1.0.0",
-    "description": "Minha implementação do https://www.tabnews.com.br feita para aplicar na prática os conhecimentos passados durante as aulas do https://curso.dev",
-    "main": "index.js",
-    "scripts": {
-        "dev": "next dev",
-        "build": "next build",
-        "start": "next start",
-        "lint": "next lint"
-    },
-    "keywords": [],
-    "author": "Ygor Evaldt",
-    "license": "MIT",
-    "dependencies": {
-        "next": "13.1.6",
-        "react": "18.2.0",
-        "react-dom": "18.2.0"
-    }
+	"name": "clone-tabnews",
+	"version": "1.0.0",
+	"description": "Minha implementação do https://www.tabnews.com.br feita para aplicar na prática os conhecimentos passados durante as aulas do https://curso.dev",
+	"main": "index.js",
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint"
+	},
+	"keywords": [],
+	"author": "Ygor Evaldt",
+	"license": "MIT",
+	"dependencies": {
+		"next": "13.1.6",
+		"react": "18.2.0",
+		"react-dom": "18.2.0"
+	}
 }
