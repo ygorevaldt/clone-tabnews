@@ -1,10 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-class Calculator {
-  sum(number1: number, number2: number) {
-    return number1 + number2;
-  }
-}
+import { Calculator } from "@/models/calculator";
 
 describe("calculator", () => {
   const calculator = new Calculator();
