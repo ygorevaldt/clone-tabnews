@@ -1,12 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import { Calculator } from "@/models/calculator";
+import { database } from "@/infra/database";
 
 describe("calculator", () => {
-  const calculator = new Calculator();
+  it("should get sum of two numbers", async () => {
+    const [queryResult] = await database.query("SELECT 1 + 1 as sum;");
 
-  it("should get sum of two numbers", () => {
-    const result = calculator.sum(1, 1);
-    expect(result).toBe(2);
+    expect(queryResult.sum).toBe(2);
   });
 });
