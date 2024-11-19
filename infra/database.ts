@@ -1,7 +1,7 @@
 import { Client } from "pg";
 
 export const database = {
-  query: async (query: string) => {
+  query: async <T>(query: string, values: any[] = []): Promise<T[]> => {
     const {
       POSTGRES_USER,
       POSTGRES_PASSWORD,
@@ -17,11 +17,17 @@ export const database = {
       port: Number(POSTGRES_PORT),
       database: POSTGRES_DB,
     });
+
     client.connect();
 
-    const result = await client.query(query);
-
-    client.end();
-    return result.rows;
+    try {
+      const result = await client.query(query, values);
+      await client.end();
+      return result.rows;
+    } catch (error) {
+      throw error;
+    } finally {
+      await client.end();
+    }
   },
 };
