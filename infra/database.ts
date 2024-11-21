@@ -18,11 +18,9 @@ export const database = {
       database: POSTGRES_DB,
     });
 
-    client.connect();
-
     try {
+      await client.connect();
       const result = await client.query(query, values);
-      await client.end();
       return result.rows;
     } catch (error) {
       throw error;
