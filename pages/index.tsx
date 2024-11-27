@@ -1,3 +1,5 @@
+import { FiSmile } from "react-icons/fi";
+
 export default function Home() {
   return (
     <>
@@ -5,7 +7,7 @@ export default function Home() {
       <p>
         Aplicação em contrução, salve este endereço nos favoritos do seu
         navegador de internet e volte dentro de alguns dias para conferir o
-        resultado =D.
+        resultado <FiSmile />.
       </p>
     </>
   );
