@@ -16,6 +16,7 @@ export const database = {
       host: POSTGRES_HOST,
       port: Number(POSTGRES_PORT),
       database: POSTGRES_DB,
+      ssl: getSSLValues(),
     });
 
     try {
@@ -29,3 +30,13 @@ export const database = {
     }
   },
 };
+
+function getSSLValues() {
+  if (process.env.POSTGRES_CA) {
+    return {
+      ca: process.env.POSTGRES_CA,
+    };
+  }
+
+  return process.env.NODE_ENV === "production" ? true : false;
+}
