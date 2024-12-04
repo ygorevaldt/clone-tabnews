@@ -2,34 +2,42 @@ import { Client } from "pg";
 
 export const database = {
   query: async <T>(query: string, values: any[] = []): Promise<T[]> => {
-    const {
-      POSTGRES_USER,
-      POSTGRES_PASSWORD,
-      POSTGRES_HOST,
-      POSTGRES_PORT,
-      POSTGRES_DB,
-    } = process.env;
-
-    const client = new Client({
-      user: POSTGRES_USER,
-      password: POSTGRES_PASSWORD,
-      host: POSTGRES_HOST,
-      port: Number(POSTGRES_PORT),
-      database: POSTGRES_DB,
-      ssl: getSSLValues(),
-    });
+    let client: Client;
 
     try {
-      await client.connect();
+      client = await getNewClient();
       const result = await client.query(query, values);
       return result.rows;
     } catch (error) {
       throw error;
     } finally {
-      await client.end();
+      await client!.end();
     }
   },
 };
+
+export async function getNewClient() {
+  const {
+    POSTGRES_USER,
+    POSTGRES_PASSWORD,
+    POSTGRES_HOST,
+    POSTGRES_PORT,
+    POSTGRES_DB,
+  } = process.env;
+
+  const client = new Client({
+    user: POSTGRES_USER,
+    password: POSTGRES_PASSWORD,
+    host: POSTGRES_HOST,
+    port: Number(POSTGRES_PORT),
+    database: POSTGRES_DB,
+    ssl: getSSLValues(),
+  });
+
+  await client.connect();
+
+  return client;
+}
 
 function getSSLValues() {
   if (process.env.POSTGRES_CA) {
