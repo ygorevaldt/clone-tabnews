@@ -2,42 +2,43 @@ import { join } from "node:path";
 import { NextApiRequest, NextApiResponse } from "next";
 import migrationRunner, { RunnerOption } from "node-pg-migrate";
 import { getNewClient } from "@/infra/database";
+import { get } from "./get";
+import { post } from "./post";
+import { Client } from "pg";
 
 export default async function migrations(
   request: NextApiRequest,
   response: NextApiResponse,
 ) {
-  const dbClient = await getNewClient();
-  const runnerOption: RunnerOption = {
-    dbClient,
-    dryRun: true,
-    dir: join("infra", "migrations"),
-    direction: "up",
-    migrationsTable: "pgmigrations",
-    verbose: true,
-  };
+  let dbClient: Client;
+  try {
+    dbClient = await getNewClient();
 
-  const method = request.method?.toUpperCase();
+    const migrationRunnerConfig: RunnerOption = {
+      dbClient,
+      dryRun: true,
+      dir: join("infra", "migrations"),
+      direction: "up",
+      migrationsTable: "pgmigrations",
+      verbose: true,
+    };
 
-  if (method === "GET") {
-    const pendingMigrations = await migrationRunner(runnerOption);
+    const method = request.method?.toUpperCase();
+
+    if (method === "GET") {
+      return await get(response, migrationRunnerConfig);
+    }
+
+    if (method === "POST") {
+      return await post(response, migrationRunnerConfig);
+    }
+
+    return response.status(405).end();
+  } catch (error) {
+    console.error(error);
+    return response.status(500).end();
+  } finally {
+    if (!dbClient!) return;
     await dbClient.end();
-
-    return response.status(200).json(pendingMigrations);
   }
-
-  if (method === "POST") {
-    const migratedMigrations = await migrationRunner({
-      ...runnerOption,
-      dryRun: false,
-    });
-    await dbClient.end();
-
-    const wereMigrationsRun = migratedMigrations.length > 0;
-    return response
-      .status(wereMigrationsRun ? 201 : 200)
-      .json(migratedMigrations);
-  }
-
-  return response.status(405).end();
 }
