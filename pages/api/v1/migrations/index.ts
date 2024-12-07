@@ -1,10 +1,11 @@
 import { join } from "node:path";
 import { NextApiRequest, NextApiResponse } from "next";
-import migrationRunner, { RunnerOption } from "node-pg-migrate";
+import { RunnerOption } from "node-pg-migrate";
 import { getNewClient } from "@/infra/database";
 import { get } from "./get";
 import { post } from "./post";
 import { Client } from "pg";
+import { notAllowed } from "./not-allowed";
 
 export default async function migrations(
   request: NextApiRequest,
@@ -14,28 +15,17 @@ export default async function migrations(
   try {
     dbClient = await getNewClient();
 
-    const migrationRunnerConfig: RunnerOption = {
-      dbClient,
-      dryRun: true,
-      dir: join("infra", "migrations"),
-      direction: "up",
-      migrationsTable: "pgmigrations",
-      verbose: true,
-    };
+    const migrationRunnerConfig = getMigrationRunnerConfig(dbClient);
 
     const method = request.method?.toUpperCase();
-
     if (method === "GET") {
       return await get(response, migrationRunnerConfig);
     }
-
     if (method === "POST") {
       return await post(response, migrationRunnerConfig);
     }
 
-    return response.status(405).json({
-      error: `Method '${method} not allowed'`,
-    });
+    return notAllowed(request, response);
   } catch (error) {
     console.error(error);
     return response.status(500).end();
@@ -43,4 +33,15 @@ export default async function migrations(
     if (!dbClient!) return;
     await dbClient.end();
   }
+}
+
+function getMigrationRunnerConfig(dbClient: Client): RunnerOption {
+  return {
+    dbClient,
+    dryRun: true,
+    dir: join("infra", "migrations"),
+    direction: "up",
+    migrationsTable: "pgmigrations",
+    verbose: true,
+  };
 }
