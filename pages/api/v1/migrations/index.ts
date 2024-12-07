@@ -33,9 +33,9 @@ export default async function migrations(
     });
     await dbClient.end();
 
-    const whereMigrationsRunned = migratedMigrations.length > 0;
+    const wereMigrationsRun = migratedMigrations.length > 0;
     return response
-      .status(whereMigrationsRunned ? 201 : 200)
+      .status(wereMigrationsRun ? 201 : 200)
       .json(migratedMigrations);
   }
 
